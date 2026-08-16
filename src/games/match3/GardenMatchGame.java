@@ -7,6 +7,7 @@ public final class GardenMatchGame {
 
     private final BoardController board;
     private int tokens;
+    private int moves;
 
     public GardenMatchGame(Random random) {
         board = new BoardController(random);
@@ -20,8 +21,17 @@ public final class GardenMatchGame {
         if (!board.swap(first, second)) {
             return false;
         }
+        moves++;
         tokens += board.clearMatchesAndRefill();
         return true;
+    }
+
+    public int moves() {
+        return moves;
+    }
+
+    public int score() {
+        return tokens * 100;
     }
 
     public int tokens() {

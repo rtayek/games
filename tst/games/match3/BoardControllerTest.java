@@ -75,13 +75,28 @@ public final class BoardControllerTest {
     void gameAwardsTokensAndGardenLevels() {
         GardenMatchGame game = new GardenMatchGame(new BoardController(swapFixture(), new Random(1)));
 
+        assertEquals(0, game.moves());
+        assertEquals(0, game.score());
         assertEquals(0, game.tokens());
         assertEquals(1, game.gardenLevel());
         assertEquals(10, game.tokensToNextLevel());
         assertTrue(game.swap(new Position(0, 0), new Position(0, 1)));
+        assertEquals(1, game.moves());
+        assertEquals(300, game.score());
         assertEquals(3, game.tokens());
         assertEquals(1, game.gardenLevel());
         assertEquals(7, game.tokensToNextLevel());
+    }
+
+    @Test
+    void rejectedSwapDoesNotCountAsMove() {
+        GardenMatchGame game = new GardenMatchGame(new BoardController(swapFixture(), new Random(1)));
+
+        assertFalse(game.swap(new Position(0, 0), new Position(1, 0)));
+
+        assertEquals(0, game.moves());
+        assertEquals(0, game.score());
+        assertEquals(0, game.tokens());
     }
 
     private static Tile[][] matchedFixture() {

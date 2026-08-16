@@ -30,7 +30,11 @@ public final class GardenMatchApp {
         JFrame frame = new JFrame("GardenMatch");
         JPanel grid = new JPanel(new GridLayout(BoardController.SIZE, BoardController.SIZE, 2, 2));
         JButton[][] buttons = new JButton[BoardController.SIZE][BoardController.SIZE];
-        JLabel status = new JLabel(statusText("Select adjacent tiles.", game[0]));
+        JLabel message = new JLabel("Select adjacent tiles.");
+        JLabel moves = new JLabel();
+        JLabel score = new JLabel();
+        JLabel tokens = new JLabel();
+        JLabel garden = new JLabel();
         Position[] selected = new Position[1];
 
         for (int row = 0; row < BoardController.SIZE; row++) {
@@ -45,13 +49,14 @@ public final class GardenMatchApp {
                     if (selected[0] == null) {
                         selected[0] = position;
                         refresh(buttons, game[0].board(), selected[0]);
-                        status.setText(statusText("Selected " + position + ".", game[0]));
+                        message.setText("Selected " + position + ".");
                         return;
                     }
                     boolean moved = game[0].swap(selected[0], position);
                     selected[0] = null;
                     refresh(buttons, game[0].board(), null);
-                    status.setText(statusText(moved ? "Matched." : "No match.", game[0]));
+                    refreshScore(moves, score, tokens, garden, game[0]);
+                    message.setText(moved ? "Matched." : "No match.");
                 });
                 buttons[row][column] = button;
                 grid.add(button);
@@ -63,14 +68,23 @@ public final class GardenMatchApp {
             game[0] = new GardenMatchGame(new Random());
             selected[0] = null;
             refresh(buttons, game[0].board(), null);
-            status.setText(statusText("New garden.", game[0]));
+            refreshScore(moves, score, tokens, garden, game[0]);
+            message.setText("New garden.");
         });
 
+        JPanel scorePanel = new JPanel(new GridLayout(1, 4, 12, 0));
+        scorePanel.add(moves);
+        scorePanel.add(score);
+        scorePanel.add(tokens);
+        scorePanel.add(garden);
+
         JPanel top = new JPanel(new BorderLayout());
-        top.add(status, BorderLayout.CENTER);
+        top.add(message, BorderLayout.NORTH);
+        top.add(scorePanel, BorderLayout.CENTER);
         top.add(newGame, BorderLayout.EAST);
 
         refresh(buttons, game[0].board(), null);
+        refreshScore(moves, score, tokens, garden, game[0]);
         frame.add(top, BorderLayout.NORTH);
         frame.add(grid, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,8 +116,10 @@ public final class GardenMatchApp {
         };
     }
 
-    private static String statusText(String message, GardenMatchGame game) {
-        return message + " Tokens: " + game.tokens() + "  Garden: " + game.gardenLevel()
-                + "  Next: " + game.tokensToNextLevel();
+    private static void refreshScore(JLabel moves, JLabel score, JLabel tokens, JLabel garden, GardenMatchGame game) {
+        moves.setText("Moves: " + game.moves());
+        score.setText("Score: " + game.score());
+        tokens.setText("Tokens: " + game.tokens());
+        garden.setText("Garden: " + game.gardenLevel() + " Next: " + game.tokensToNextLevel());
     }
 }
