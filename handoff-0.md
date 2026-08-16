@@ -2,7 +2,7 @@
 
 **Date:** August 15, 2026
 
-**Project:** Casual Games Suite (Java 25 + JavaFX)
+**Project:** Casual Games Suite (Java 25 + Swing now, JavaFX later)
 
 **Target Platforms:** Desktop (Primary initial build), Android Mobile (Future port target)
 
@@ -37,7 +37,7 @@ Building a suite of three popular mobile casual puzzle and word games tailored f
 ### Technology Stack
 
 * **Language:** Java 25
-* **UI Framework:** JavaFX (utilizing standard layout containers, CSS styling, and hardware-accelerated Prism pipelines).
+* **UI Framework:** Swing for the current desktop prototype; JavaFX is the planned replacement once the game loops settle.
 * **Persistence:** SQLite-ready repository patterns (designed for desktop file paths or Android app database directories).
 
 ### Package Layout Specification
@@ -47,14 +47,14 @@ games/
 |-- core/
 |   `-- GameEngine.java           # Shared asset manager, sound/fx hooks, lifecycle timing
 |-- wordconnect/
-|   |-- WordSproutApp.java        # Main JavaFX launcher
+|   |-- WordSproutApp.java        # Main Swing launcher
 |   |-- LetterWheelController.java # Circular touch/mouse swipe selector
 |   `-- CrosswordBoardPane.java   # Dynamic crossword board renderer & validator
 |-- match3/
-|   |-- GardenMatchApp.java       # Main JavaFX launcher
+|   |-- GardenMatchApp.java       # Main Swing launcher
 |   `-- BoardController.java      # Grid state matrix & match-3 logic
 `-- merge/
-    |-- MergeMansionApp.java      # Main JavaFX launcher
+    |-- MergeMansionApp.java      # Main Swing launcher
     `-- ItemNode.java             # Level-based inventory & merge logic
 
 ```
@@ -65,9 +65,9 @@ games/
 
 To ensure a seamless future migration to mobile (Android via Gluon Mobile / GraalVM native images or native Android UI bindings):
 
-* **Strict Domain Separation:** Zero business logic, word validation, or match-3 matrix rules are coupled to JavaFX visual nodes (`Node`, `Scene`, `Stage`). Service and puzzle logic exist as pure Java classes.
+* **Strict Domain Separation:** Zero business logic, word validation, or match-3 matrix rules are coupled to Swing widgets or future JavaFX visual nodes. Service and puzzle logic exist as pure Java classes.
 * **Unified Gesture Handling:** Input controllers utilize pointer-friendly event structures that map cleanly between desktop mouse dragging and mobile touch events.
-* **Resolution Independence:** All game boards and grids rely on responsive JavaFX layout panes (`VBox`, `HBox`, `GridPane`, `StackPane`) rather than hardcoded desktop window coordinates.
+* **Resolution Independence:** Game boards and grids should rely on layout managers now and responsive JavaFX layout panes later, rather than hardcoded desktop window coordinates.
 
 ---
 
