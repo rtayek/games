@@ -22,6 +22,21 @@ public final class BoardController {
         }
     }
 
+    BoardController(Tile[][] tiles, Random random) {
+        this.random = Objects.requireNonNull(random);
+        if (tiles.length != SIZE) {
+            throw new IllegalArgumentException("board must have " + SIZE + " rows");
+        }
+        for (int row = 0; row < SIZE; row++) {
+            if (tiles[row].length != SIZE) {
+                throw new IllegalArgumentException("board must have " + SIZE + " columns");
+            }
+            for (int column = 0; column < SIZE; column++) {
+                this.tiles[row][column] = tiles[row][column];
+            }
+        }
+    }
+
     public Tile tileAt(Position position) {
         check(position);
         return tiles[position.row()][position.column()];
@@ -77,10 +92,17 @@ public final class BoardController {
     }
 
     public int clearMatchesAndRefill() {
+        int total = 0;
         int cleared = clearMatches();
+        while (cleared > 0) {
+            total += cleared;
+            collapseColumns();
+            refill();
+            cleared = clearMatches();
+        }
         collapseColumns();
         refill();
-        return cleared;
+        return total;
     }
 
     public String render() {
@@ -136,7 +158,7 @@ public final class BoardController {
         for (int row = 0; row < SIZE; row++) {
             for (int column = 0; column < SIZE; column++) {
                 if (tiles[row][column] == null) {
-                    tiles[row][column] = values[random.nextInt(values.length)];
+                    tiles[row][column] = nextNonMatchingTile(values, random, row, column);
                 }
             }
         }
