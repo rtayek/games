@@ -1,10 +1,15 @@
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Container
 import org.gradle.plugins.ide.eclipse.model.Library
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
     application
+    checkstyle
     eclipse
+    id("com.github.spotbugs") version "6.5.10"
+    jacoco
+    pmd
 }
 
 java {
@@ -12,6 +17,8 @@ java {
         languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
+
+layout.buildDirectory.set(file(".gradle-build"))
 
 sourceSets {
     main {
@@ -37,6 +44,53 @@ application {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = "10.18.0"
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    isIgnoreFailures = false
+    isShowViolations = true
+}
+
+pmd {
+    toolVersion = "7.26.0"
+    isConsoleOutput = true
+    isIgnoreFailures = false
+    ruleSets = emptyList()
+    ruleSetConfig = resources.text.fromFile(file("${rootDir}/config/pmd/pmd.xml"))
+}
+
+spotbugs {
+    toolVersion = "4.10.3"
+    ignoreFailures.set(false)
+    excludeFilter.set(file("${rootDir}/config/spotbugs/exclude.xml"))
+}
+
+jacoco {
+    toolVersion = "0.8.15"
+}
+
+tasks.named<Test>("test") {
+    finalizedBy(tasks.named("jacocoTestReport"))
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.named("test"))
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+    }
+}
+
+tasks.named("check") {
+    dependsOn(
+        tasks.named("checkstyleMain"),
+        tasks.named("pmdMain"),
+        tasks.named("spotbugsMain"),
+        tasks.named("jacocoTestReport")
+    )
 }
 
 eclipse {
