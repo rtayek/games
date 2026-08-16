@@ -46,6 +46,25 @@ public final class MergeBoard {
         return items[position.row()][position.column()];
     }
 
+    public MergePosition firstEmptyCell() {
+        for (int row = 0; row < items.length; row++) {
+            for (int column = 0; column < items[row].length; column++) {
+                if (items[row][column] == null) {
+                    return new MergePosition(row, column);
+                }
+            }
+        }
+        return null;
+    }
+
+    public int rows() {
+        return items.length;
+    }
+
+    public int columns() {
+        return items[0].length;
+    }
+
     public String render() {
         StringBuilder out = new StringBuilder();
         for (int row = 0; row < items.length; row++) {
