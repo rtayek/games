@@ -1,4 +1,4 @@
-package chatmap.games;
+package games;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
@@ -18,7 +18,7 @@ public final class JUnitRunner {
     public static void main(String[] args) {
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectPackage("chatmap.games"))
+                .selectors(selectPackage("games"))
                 .build();
         Launcher launcher = LauncherFactory.create();
 

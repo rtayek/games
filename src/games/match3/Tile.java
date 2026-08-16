@@ -1,4 +1,4 @@
-package chatmap.games.match3;
+package games.match3;
 
 public enum Tile {
     ROSE,

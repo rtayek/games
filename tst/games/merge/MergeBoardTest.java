@@ -1,4 +1,4 @@
-package chatmap.games.merge;
+package games.merge;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

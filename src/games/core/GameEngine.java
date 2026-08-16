@@ -1,4 +1,4 @@
-package chatmap.games.core;
+package games.core;
 
 import java.time.Clock;
 import java.time.Duration;

@@ -1,4 +1,4 @@
-package chatmap.games.merge;
+package games.merge;
 
 public final class MergeMansionApp {
     private MergeMansionApp() {

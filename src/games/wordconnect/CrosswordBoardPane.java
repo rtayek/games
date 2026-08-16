@@ -1,4 +1,4 @@
-package chatmap.games.wordconnect;
+package games.wordconnect;
 
 import java.util.Collection;
 import java.util.Set;

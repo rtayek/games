@@ -43,7 +43,7 @@ Building a suite of three popular mobile casual puzzle and word games tailored f
 ### Package Layout Specification
 
 ```text
-chatmap.games/
+games/
 |-- core/
 |   `-- GameEngine.java           # Shared asset manager, sound/fx hooks, lifecycle timing
 |-- wordconnect/
@@ -73,6 +73,6 @@ To ensure a seamless future migration to mobile (Android via Gluon Mobile / Graa
 
 ## 4. Immediate Action Queue for Next Chat
 
-1. **Initialize Module Structure:** Create the `chatmap.games` package tree and root build configuration.
+1. **Initialize Module Structure:** Create the `games` package tree and root build configuration.
 2. **Complete WordSprout Gameplay Loop:** Integrate `LetterWheelController` and `CrosswordBoardPane` into `WordSproutApp` with a functional level-loading dictionary validator.
 3. **Draft GardenMatch Board Interactions:** Expand `BoardController` to handle live tile swapping and match-clearing animations.

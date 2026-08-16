@@ -33,4 +33,4 @@ done
 find src tst -name '*.java' | sort > "$sources"
 javac -cp "$classpath" -d "$classes" @"$sources"
 
-java -cp "$classpath" chatmap.games.JUnitRunner
+java -cp "$classpath" games.JUnitRunner

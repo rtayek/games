@@ -1,4 +1,4 @@
-package chatmap.games.wordconnect;
+package games.wordconnect;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

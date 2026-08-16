@@ -1,4 +1,4 @@
-package chatmap.games.merge;
+package games.merge;
 
 import java.util.Objects;
 

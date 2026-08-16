@@ -1,4 +1,4 @@
-package chatmap.games.match3;
+package games.match3;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

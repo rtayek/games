@@ -1,4 +1,4 @@
-package chatmap.games.wordconnect;
+package games.wordconnect;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

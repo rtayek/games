@@ -1,4 +1,4 @@
-package chatmap.games.merge;
+package games.merge;
 
 public record ItemNode(String family, int level) {
     public ItemNode {

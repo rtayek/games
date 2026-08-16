@@ -1,4 +1,4 @@
-package chatmap.games.core;
+package games.core;
 
 public enum GameKind {
     WORD_SPROUT,
