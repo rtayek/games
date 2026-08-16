@@ -30,7 +30,7 @@ do
     classpath="$classpath;$(cygpath -w "$jar")"
 done
 
-find src tst -name '*.java' | sort > "$sources"
+find src tst tools -name '*.java' | sort > "$sources"
 javac -cp "$classpath" -d "$classes" @"$sources"
 
 java -cp "$classpath" games.JUnitRunner
