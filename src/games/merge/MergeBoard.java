@@ -23,6 +23,9 @@ public final class MergeBoard {
     public boolean drag(MergePosition from, MergePosition to) {
         check(from);
         check(to);
+        if (from.equals(to)) {
+            return false;
+        }
         ItemNode source = items[from.row()][from.column()];
         ItemNode target = items[to.row()][to.column()];
         if (source == null) {

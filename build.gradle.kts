@@ -1,6 +1,7 @@
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Container
 import org.gradle.plugins.ide.eclipse.model.Library
+import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
@@ -49,6 +50,10 @@ checkstyle {
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     isIgnoreFailures = false
     isShowViolations = true
+}
+
+tasks.withType<Checkstyle>().configureEach {
+    maxWarnings = 0
 }
 
 pmd {

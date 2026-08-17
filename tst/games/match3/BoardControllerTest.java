@@ -20,6 +20,7 @@ public final class BoardControllerTest {
         BoardController board = new BoardController(new Random(3));
 
         assertTrue(board.matches().isEmpty(), "new board has no immediate matches");
+        assertTrue(board.hasLegalMove(), "new board has at least one legal move");
         assertFalse(board.swap(new Position(0, 0), new Position(2, 0)), "non-adjacent swap rejected");
         assertNotNull(board.tileAt(new Position(7, 7)), "last tile populated");
     }
@@ -69,6 +70,25 @@ public final class BoardControllerTest {
             }
         }
         assertTrue(board.matches().isEmpty(), "refill resolves immediate matches");
+        assertTrue(board.hasLegalMove(), "refill leaves a legal move");
+    }
+
+    @Test
+    void detectsDeadlockedBoard() {
+        BoardController board = new BoardController(deadlockedFixture(), new Random(1));
+
+        assertTrue(board.matches().isEmpty(), "fixture has no immediate matches");
+        assertFalse(board.hasLegalMove(), "fixture has no legal swap");
+    }
+
+    @Test
+    void recoversDeadlockedBoard() {
+        BoardController board = new BoardController(deadlockedFixture(), new Random(1));
+
+        board.ensurePlayable();
+
+        assertTrue(board.matches().isEmpty(), "recovered board has no immediate matches");
+        assertTrue(board.hasLegalMove(), "recovered board has a legal swap");
     }
 
     @Test
@@ -119,5 +139,16 @@ public final class BoardControllerTest {
                 { TULIP, LILY, DAISY, ROSE, TULIP, LILY, IRIS, DAISY },
                 { LILY, IRIS, ROSE, TULIP, LILY, IRIS, DAISY, ROSE },
         };
+    }
+
+    private static Tile[][] deadlockedFixture() {
+        Tile[] values = { ROSE, TULIP, DAISY, LILY, IRIS };
+        Tile[][] tiles = new Tile[BoardController.SIZE][BoardController.SIZE];
+        for (int row = 0; row < BoardController.SIZE; row++) {
+            for (int column = 0; column < BoardController.SIZE; column++) {
+                tiles[row][column] = values[(row + column) % values.length];
+            }
+        }
+        return tiles;
     }
 }

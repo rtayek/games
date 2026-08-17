@@ -2,9 +2,11 @@ package games.wordconnect;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ public final class WordLevel {
         }
         this.letters = normalizeLetters(letters);
         this.answers = normalizeAnswers(answers);
+        validateAnswersAvailable(this.letters, this.answers);
     }
 
     public List<Character> letters() {
@@ -58,6 +61,34 @@ public final class WordLevel {
             throw new IllegalArgumentException("answers must not be empty");
         }
         return Set.copyOf(normalized);
+    }
+
+    private static void validateAnswersAvailable(List<Character> letters, Set<String> answers) {
+        Map<Character, Integer> available = counts(letters);
+        for (String answer : answers) {
+            Map<Character, Integer> required = counts(answer);
+            for (Map.Entry<Character, Integer> entry : required.entrySet()) {
+                if (entry.getValue() > available.getOrDefault(entry.getKey(), 0)) {
+                    throw new IllegalArgumentException("answer cannot be built from wheel letters: " + answer);
+                }
+            }
+        }
+    }
+
+    private static Map<Character, Integer> counts(List<Character> letters) {
+        HashMap<Character, Integer> counts = new HashMap<>();
+        for (Character letter : letters) {
+            counts.merge(letter, 1, Integer::sum);
+        }
+        return counts;
+    }
+
+    private static Map<Character, Integer> counts(String word) {
+        HashMap<Character, Integer> counts = new HashMap<>();
+        for (char letter : word.toCharArray()) {
+            counts.merge(letter, 1, Integer::sum);
+        }
+        return counts;
     }
 
     static String normalizeWord(String word) {

@@ -90,4 +90,17 @@ public final class MergeBoardTest {
         assertEquals(0, game.moves());
         assertEquals(0, game.score());
     }
+
+    @Test
+    void sameCellGameDragIsRejectedWithoutMutation() {
+        MergeBoard board = new MergeBoard(2, 2);
+        board.place(new MergePosition(0, 0), new ItemNode("seed", 1));
+        MergeMansionGame game = new MergeMansionGame(board);
+
+        assertFalse(game.drag(new MergePosition(0, 0), new MergePosition(0, 0)));
+
+        assertEquals(new ItemNode("seed", 1), game.board().itemAt(new MergePosition(0, 0)));
+        assertEquals(0, game.moves());
+        assertEquals(0, game.score());
+    }
 }

@@ -14,27 +14,12 @@ public final class BoardController {
 
     public BoardController(Random random) {
         this.random = Objects.requireNonNull(random);
-        Tile[] values = Tile.values();
-        for (int row = 0; row < SIZE; row++) {
-            for (int column = 0; column < SIZE; column++) {
-                tiles[row][column] = nextNonMatchingTile(values, this.random, row, column);
-            }
-        }
+        fillPlayableBoard();
     }
 
     BoardController(Tile[][] tiles, Random random) {
         this.random = Objects.requireNonNull(random);
-        if (tiles.length != SIZE) {
-            throw new IllegalArgumentException("board must have " + SIZE + " rows");
-        }
-        for (int row = 0; row < SIZE; row++) {
-            if (tiles[row].length != SIZE) {
-                throw new IllegalArgumentException("board must have " + SIZE + " columns");
-            }
-            for (int column = 0; column < SIZE; column++) {
-                this.tiles[row][column] = tiles[row][column];
-            }
-        }
+        copyTiles(tiles);
     }
 
     public Tile tileAt(Position position) {
@@ -54,6 +39,54 @@ public final class BoardController {
             return false;
         }
         return true;
+    }
+
+    public boolean hasLegalMove() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int column = 0; column < SIZE; column++) {
+                Position position = new Position(row, column);
+                if (wouldMatch(position, new Position(row, column + 1))
+                        || wouldMatch(position, new Position(row + 1, column))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void ensurePlayable() {
+        if (!hasLegalMove()) {
+            fillPlayableBoard();
+        }
+    }
+
+    private void fillPlayableBoard() {
+        do {
+            fillBoardWithoutMatches();
+        } while (!hasLegalMove());
+    }
+
+    private void fillBoardWithoutMatches() {
+        Tile[] values = Tile.values();
+        for (int row = 0; row < SIZE; row++) {
+            for (int column = 0; column < SIZE; column++) {
+                tiles[row][column] = nextNonMatchingTile(values, this.random, row, column);
+            }
+        }
+    }
+
+    private void copyTiles(Tile[][] tiles) {
+        if (tiles.length != SIZE) {
+            throw new IllegalArgumentException("board must have " + SIZE + " rows");
+        }
+        for (int row = 0; row < SIZE; row++) {
+            if (tiles[row].length != SIZE) {
+                throw new IllegalArgumentException("board must have " + SIZE + " columns");
+            }
+            for (int column = 0; column < SIZE; column++) {
+                this.tiles[row][column] = tiles[row][column];
+            }
+        }
     }
 
     public Set<Position> matches() {
@@ -102,6 +135,7 @@ public final class BoardController {
         }
         collapseColumns();
         refill();
+        ensurePlayable();
         return total;
     }
 
@@ -167,6 +201,19 @@ public final class BoardController {
     private static boolean adjacent(Position first, Position second) {
         int distance = Math.abs(first.row() - second.row()) + Math.abs(first.column() - second.column());
         return distance == 1;
+    }
+
+    private boolean wouldMatch(Position first, Position second) {
+        if (second.row() >= SIZE || second.column() >= SIZE) {
+            return false;
+        }
+        if (tiles[first.row()][first.column()] == tiles[second.row()][second.column()]) {
+            return false;
+        }
+        exchange(first, second);
+        boolean matched = !matches().isEmpty();
+        exchange(first, second);
+        return matched;
     }
 
     private void exchange(Position first, Position second) {

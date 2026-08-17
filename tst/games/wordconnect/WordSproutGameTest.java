@@ -2,6 +2,7 @@ package games.wordconnect;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -25,5 +26,15 @@ public final class WordSproutGameTest {
         assertFalse(game.complete(), "level incomplete");
         assertTrue(game.submit("sort"), "second valid word accepted");
         assertTrue(game.complete(), "level complete");
+    }
+
+    @Test
+    void rejectsAnswerWithUnavailableLetter() {
+        assertThrows(IllegalArgumentException.class, () -> new WordLevel("sprout", List.of("SODA")));
+    }
+
+    @Test
+    void rejectsAnswerWithTooManyCopiesOfLetter() {
+        assertThrows(IllegalArgumentException.class, () -> new WordLevel("sprout", List.of("SOOT")));
     }
 }
